@@ -74,7 +74,7 @@ namespace BiancasBikeShop.Repositories
                         LEFT JOIN Owner ON b.OwnerId = Owner.Id 
                         LEFT JOIN BikeType bt ON bt.Id = b.BikeTypeId
                         LEFT JOIN WorkOrder wo ON b.Id = wo.BikeId
-                        WHERE b.Id = 40
+                        WHERE b.Id = @Id
                     ";
                     cmd.Parameters.AddWithValue("@Id", id);
 
@@ -82,12 +82,10 @@ namespace BiancasBikeShop.Repositories
                     {
 
                         var bikes = new List<Bike>();
+                        var workOrders = new List<WorkOrder>();
                         while (reader.Read())
                         {
-                            var bikeId = reader.GetInt32(reader.GetOrdinal("Id"));
-
-                            var existingBike = bikes.FirstOrDefault(p => p.Id == bikeId);
-                            if (existingBike == null)
+                            if (bikes.Count == 0 )
                             {
                                 Bike bike = new Bike()
                                 {
@@ -110,17 +108,30 @@ namespace BiancasBikeShop.Repositories
 
                             }
 
-                            if (!reader.IsDBNull(reader.GetOrdinal("WorkOrderId")))
+                            if (reader.GetInt32(reader.GetOrdinal("WorkOrderId")) > 0)
                             {
-                                existingBike.WorkOrders.Add(new WorkOrder()
+                                var workOrder = new WorkOrder();
+                                
+                                if(reader.IsDBNull(reader.GetOrdinal("WorkOrderId")) == false)
                                 {
-                                    Id = reader.GetInt32(reader.GetOrdinal("WorkOrderId")),
-                                    DateInitiated = reader.GetDateTime(reader.GetOrdinal("DateInitiated")),
-                                    DateCompleted = reader.GetDateTime(reader.GetOrdinal("DateCompleted")),
-                                    Description = reader.GetString(reader.GetOrdinal("Description"))
-                                });
+                                    workOrder.Id = reader.GetInt32(reader.GetOrdinal("WorkOrderId"));
+                                };
+                                if (reader.IsDBNull(reader.GetOrdinal("DateInitiated")) == false)
+                                {
+                                    workOrder.DateInitiated = reader.GetDateTime(reader.GetOrdinal("DateInitiated"));
+                                };
+                                if (reader.IsDBNull(reader.GetOrdinal("DateCompleted")) == false)
+                                {
+                                    workOrder.DateCompleted = reader.GetDateTime(reader.GetOrdinal("DateCompleted"));
+                                };
+                                if (reader.IsDBNull(reader.GetOrdinal("Description")) == false)
+                                {
+                                    workOrder.Description = reader.GetString(reader.GetOrdinal("Description"));
+                                };
+                                workOrders.Add(workOrder);
                             }
                         }
+                        bikes[0].WorkOrders.AddRange(workOrders);
                         Bike bikeWithWorkOrders = bikes[0];
                         return bikeWithWorkOrders;
                     }
