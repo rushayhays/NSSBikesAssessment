@@ -5,6 +5,7 @@ import {Navbar, NavbarBrand, NavbarText} from 'reactstrap';
 import BikeList from './components/BikeList';
 import BikeDetails from './components/BikeDetails';
 
+
 function App() {
   const [inventory, setInventory] = useState({count: 0})
   const [detailsBikeId, setDetailsBikeId] = useState(null)
@@ -44,6 +45,7 @@ function App() {
         </div>
       </div>
     </div>
+    
   );
 }
 

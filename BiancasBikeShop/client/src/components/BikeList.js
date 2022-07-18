@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { getBikes } from "../bikeManager"
 import BikeCard from "./BikeCard"
 
 export default function BikeList({setDetailsBikeId}) {
@@ -6,6 +7,10 @@ export default function BikeList({setDetailsBikeId}) {
 
     const getAllBikes = () => {
         //implement functionality here...
+        getBikes().then((fetchedBikes)=>{
+            setBikes(fetchedBikes)
+            console.log(fetchedBikes)
+        })
     }
 
     useEffect(() => {
@@ -13,8 +18,20 @@ export default function BikeList({setDetailsBikeId}) {
     }, [])
     return (
         <>
-        <h2>Bikes</h2>
-        {/* Use BikeCard component here to list bikes...*/}
+            <h2>Bikes</h2>
+            {/* Use BikeCard component here to list bikes...*/}
+            {(bikes.length === 0)?
+            
+                <>
+                    <p>Loading...</p>
+                </>
+                :
+                <>
+                {bikes.map((bike)=>(
+                    <BikeCard bike={bike} key={bike.id} setDetailsBikeId={setDetailsBikeId}/>
+                ))}
+                </>
+            }
         </>
     )
 }
