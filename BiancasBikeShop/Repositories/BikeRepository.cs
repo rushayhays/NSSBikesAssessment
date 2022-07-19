@@ -50,8 +50,6 @@ namespace BiancasBikeShop.Repositories
                     return bikes;
                 }
             }
-               
-           
         }
 
         //public Bike GetBikeById(int id)
@@ -141,9 +139,29 @@ namespace BiancasBikeShop.Repositories
 
         public int GetBikesInShopCount()
         {
-            int count = 0;
-            // implement code here... 
-            return count;
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        Select COUNT(b.Id) As BikesInShop
+                        FROM Bike b
+                        JOIN WorkOrder wo ON b.ID = wo.BikeId
+                        WHERE DateCompleted IS NULL 
+                    ";
+
+                    // implement code here... 
+                    int count = 0;
+                    var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        count = reader.GetInt32(reader.GetOrdinal("BikesInShop"));
+                    }
+                    reader.Close();
+                    return count;
+                }
+            }
         }
     }
 }

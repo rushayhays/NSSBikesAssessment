@@ -9,7 +9,6 @@ export default function BikeList({setDetailsBikeId}) {
         //implement functionality here...
         getBikes().then((fetchedBikes)=>{
             setBikes(fetchedBikes)
-            console.log(fetchedBikes)
         })
     }
 

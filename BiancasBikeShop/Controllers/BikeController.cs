@@ -31,16 +31,17 @@ namespace BiancasBikeShop.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-             //add implementation here... 
-             return Ok(_bikeRepo.GetBikeById(id));
+            //add implementation here... 
+            return Ok(_bikeRepo.GetBikeById(id));
         }
 
-    // 
-    // public IActionResult GetBikesInShopCount()
-    // {
-    //     //add implementation here...
+        //
+        [HttpGet("BikesInShop")]
+        public IActionResult GetBikesInShopCount()
+        {
+            //add implementation here...
 
-    //     return Ok();
-    // }
-}
+            return Ok(_bikeRepo.GetBikesInShopCount());
+        }
+    }
 }
